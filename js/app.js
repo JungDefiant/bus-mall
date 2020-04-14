@@ -40,8 +40,10 @@ Product.prototype.render = function () {
   var renderElement = document.createElement('li');
   this.imageElement = document.createElement('img');
 
+  var newClickEvent = this.clickEvent.bind(this);
+
   this.imageElement.setAttribute('src', this.imgPath);
-  this.imageElement.addEventListener('click', this.clickEvent);
+  this.imageElement.addEventListener('click', newClickEvent);
 
   renderElement.appendChild(this.imageElement);
   return renderElement;
@@ -62,10 +64,11 @@ renderResults = function() {
     document.removeEventListener('click', allProducts[i].imageElement.clickEvent);
 
     var renderElement = document.createElement('li');
+    var figureElement = document.createElement('figure');
     allProducts[i].imageElement = document.createElement('img');
 
     renderElement.textContent = allProducts[i].name + ' had ' + allProducts[i].numClicks + ' votes and was shown ' + allProducts[i].numViews + ' times.'
-    allProducts[i].imageElement.setAttribute('src', this.imgPath);
+    allProducts[i].imageElement.setAttribute('src', allProducts[i].imgPath);
 
     renderElement.appendChild(allProducts[i].imageElement);
     productList.appendChild(renderElement);
