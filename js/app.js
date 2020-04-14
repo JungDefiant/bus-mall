@@ -113,9 +113,24 @@ generateProductImages = function () {
   }
 };
 
-Product.allProducts.push(new Product('bag', 'img/bag.jpg'));
-Product.allProducts.push(new Product('banana', 'img/banana.jpg'));
-Product.allProducts.push(new Product('banana', 'img/banana.jpg'));
-Product.allProducts.push(new Product('banana', 'img/banana.jpg'));
-
+Product.allProducts.push(new Product('Droid Bag', 'img/bag.jpg'));
+Product.allProducts.push(new Product('Banana Slicer', 'img/banana.jpg'));
+Product.allProducts.push(new Product('Bathroom Selfie Stick', 'img/bathroom.jpg'));
+Product.allProducts.push(new Product('Running Rain Boots', 'img/boots.jpg'));
+Product.allProducts.push(new Product('All-In-One Breakfast Kitchen', 'img/breakfast.jpg'));
+Product.allProducts.push(new Product('Meatball Bubblegum', 'img/bubblegum.jpg'));
+Product.allProducts.push(new Product('Best Chair', 'img/chair.jpg'));
+Product.allProducts.push(new Product('Effigy Of The High Priest', 'img/cthulhu.jpg'));
+Product.allProducts.push(new Product('Duck Mask For Dogs', 'img/dog-duck.jpg'));
+Product.allProducts.push(new Product('Dragon Meat', 'img/dragon.jpg'));
+Product.allProducts.push(new Product('Silverware Pen Caps', 'img/pen.jpg'));
+Product.allProducts.push(new Product('Pet Sweep', 'img/pet-sweep.jpg'));
+Product.allProducts.push(new Product('Pizza Scissors', 'img/scissors.jpg'));
+Product.allProducts.push(new Product('Shark Sleeping Bag', 'img/shark.jpg'));
+Product.allProducts.push(new Product('Baby Sweep', 'img/sweep.png'));
+Product.allProducts.push(new Product('Taun-Taun Sleeping Bag', 'img/tauntaun.jpg'));
+Product.allProducts.push(new Product('Unicorn Meat', 'img/unicorn.jpg'));
+Product.allProducts.push(new Product('Thumb Drive From The Deep', 'img/usb.gif'));
+Product.allProducts.push(new Product('Self-Refilling Water Can', 'img/water-can.jpg'));
+Product.allProducts.push(new Product('Impossible Wine Glass', 'img/wine-glass.jpg'));
 generateProductImages();

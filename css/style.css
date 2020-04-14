@@ -8,7 +8,7 @@ body {
   display: inline;
   list-style-type: none;
   margin: 0;
-  padding: 0;
+  padding: 0px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -21,6 +21,7 @@ img {
 
 figure {
   float: left;
+  padding: 20px;
   max-width: 150px;
   max-height: 150px;
 }
