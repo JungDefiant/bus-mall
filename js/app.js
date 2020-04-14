@@ -24,9 +24,6 @@
 var votingRounds = 25;
 var currentVotingRounds = 0;
 
-var allProducts = [];
-var productsDisplayed = [];
-
 
 function Product(name, imgPath) {
   this.name = name;
@@ -36,12 +33,17 @@ function Product(name, imgPath) {
   this.imageElement;
 };
 
+Product.allProducts = [];
+Product.productsDisplayed = [];
+
 Product.prototype.render = function () {
   var renderElement = document.createElement('li');
   this.imageElement = document.createElement('img');
 
+  var newClickEvent = this.clickEvent.bind(this);
+
   this.imageElement.setAttribute('src', this.imgPath);
-  this.imageElement.addEventListener('click', this.clickEvent);
+  this.imageElement.addEventListener('click', newClickEvent);
 
   renderElement.appendChild(this.imageElement);
   return renderElement;
@@ -58,24 +60,29 @@ renderResults = function() {
   var productList = document.getElementById('product-list');
   productList.innerHTML = '';
 
-  for (let i = 0; i < allProducts.length; i++) {
-    document.removeEventListener('click', allProducts[i].imageElement.clickEvent);
+  for (let i = 0; i < Product.allProducts.length; i++) {
+    document.removeEventListener('click', Product.allProducts[i].imageElement.clickEvent);
 
     var renderElement = document.createElement('li');
-    allProducts[i].imageElement = document.createElement('img');
+    var figureElement = document.createElement('figure');
+    var figCapElement = document.createElement('figcaption');
 
-    renderElement.textContent = allProducts[i].name + ' had ' + allProducts[i].numClicks + ' votes and was shown ' + allProducts[i].numViews + ' times.'
-    allProducts[i].imageElement.setAttribute('src', this.imgPath);
+    Product.allProducts[i].imageElement = document.createElement('img');
 
-    renderElement.appendChild(allProducts[i].imageElement);
+    figCapElement.textContent = Product.allProducts[i].name + ' had ' + Product.allProducts[i].numClicks + ' votes and was shown ' + Product.allProducts[i].numViews + ' times.'
+    Product.allProducts[i].imageElement.setAttribute('src', Product.allProducts[i].imgPath);
+
+    figureElement.appendChild(Product.allProducts[i].imageElement);
+    figureElement.appendChild(figCapElement);
+    renderElement.appendChild(figureElement);
     productList.appendChild(renderElement);
   }
 };
 
 emptyDisplayedProductsToAllProducts = function() {
-  while(productsDisplayed.length > 0) {
-    var nextProduct = productsDisplayed.pop();
-    allProducts.push(nextProduct);
+  while(Product.productsDisplayed.length > 0) {
+    var nextProduct = Product.productsDisplayed.pop();
+    Product.allProducts.push(nextProduct);
   }
 }
 
@@ -92,23 +99,38 @@ generateProductImages = function () {
   emptyDisplayedProductsToAllProducts();
 
   for (let i = 0; i < 3; i++) {
-    var randomProductIndex = Math.round(Math.floor(Math.random() * allProducts.length));
+    var randomProductIndex = Math.round(Math.floor(Math.random() * Product.allProducts.length));
     console.log(randomProductIndex);
 
-    var productToDisplay = allProducts[randomProductIndex];
-    allProducts.splice(randomProductIndex, 1);
+    var productToDisplay = Product.allProducts[randomProductIndex];
+    Product.allProducts.splice(randomProductIndex, 1);
 
-    console.log(allProducts);
+    console.log(Product.allProducts);
 
     productToDisplay.numViews++;
-    productsDisplayed.push(productToDisplay);
+    Product.productsDisplayed.push(productToDisplay);
     productList.appendChild(productToDisplay.render());
   }
 };
 
-allProducts.push(new Product('bag', 'img/bag.jpg'));
-allProducts.push(new Product('banana', 'img/banana.jpg'));
-allProducts.push(new Product('banana', 'img/banana.jpg'));
-allProducts.push(new Product('banana', 'img/banana.jpg'));
-
+Product.allProducts.push(new Product('Droid Bag', 'img/bag.jpg'));
+Product.allProducts.push(new Product('Banana Slicer', 'img/banana.jpg'));
+Product.allProducts.push(new Product('Bathroom Selfie Stick', 'img/bathroom.jpg'));
+Product.allProducts.push(new Product('Running Rain Boots', 'img/boots.jpg'));
+Product.allProducts.push(new Product('All-In-One Breakfast Kitchen', 'img/breakfast.jpg'));
+Product.allProducts.push(new Product('Meatball Bubblegum', 'img/bubblegum.jpg'));
+Product.allProducts.push(new Product('Best Chair', 'img/chair.jpg'));
+Product.allProducts.push(new Product('Effigy Of The High Priest', 'img/cthulhu.jpg'));
+Product.allProducts.push(new Product('Duck Mask For Dogs', 'img/dog-duck.jpg'));
+Product.allProducts.push(new Product('Dragon Meat', 'img/dragon.jpg'));
+Product.allProducts.push(new Product('Silverware Pen Caps', 'img/pen.jpg'));
+Product.allProducts.push(new Product('Pet Sweep', 'img/pet-sweep.jpg'));
+Product.allProducts.push(new Product('Pizza Scissors', 'img/scissors.jpg'));
+Product.allProducts.push(new Product('Shark Sleeping Bag', 'img/shark.jpg'));
+Product.allProducts.push(new Product('Baby Sweep', 'img/sweep.png'));
+Product.allProducts.push(new Product('Taun-Taun Sleeping Bag', 'img/tauntaun.jpg'));
+Product.allProducts.push(new Product('Unicorn Meat', 'img/unicorn.jpg'));
+Product.allProducts.push(new Product('Thumb Drive From The Deep', 'img/usb.gif'));
+Product.allProducts.push(new Product('Self-Refilling Water Can', 'img/water-can.jpg'));
+Product.allProducts.push(new Product('Impossible Wine Glass', 'img/wine-glass.jpg'));
 generateProductImages();
