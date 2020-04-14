@@ -24,9 +24,6 @@
 var votingRounds = 25;
 var currentVotingRounds = 0;
 
-var allProducts = [];
-var productsDisplayed = [];
-
 
 function Product(name, imgPath) {
   this.name = name;
@@ -35,6 +32,9 @@ function Product(name, imgPath) {
   this.numViews = 0;
   this.imageElement;
 };
+
+Product.allProducts = [];
+Product.productsDisplayed = [];
 
 Product.prototype.render = function () {
   var renderElement = document.createElement('li');
@@ -60,25 +60,29 @@ renderResults = function() {
   var productList = document.getElementById('product-list');
   productList.innerHTML = '';
 
-  for (let i = 0; i < allProducts.length; i++) {
-    document.removeEventListener('click', allProducts[i].imageElement.clickEvent);
+  for (let i = 0; i < Product.allProducts.length; i++) {
+    document.removeEventListener('click', Product.allProducts[i].imageElement.clickEvent);
 
     var renderElement = document.createElement('li');
     var figureElement = document.createElement('figure');
-    allProducts[i].imageElement = document.createElement('img');
+    var figCapElement = document.createElement('figcaption');
 
-    renderElement.textContent = allProducts[i].name + ' had ' + allProducts[i].numClicks + ' votes and was shown ' + allProducts[i].numViews + ' times.'
-    allProducts[i].imageElement.setAttribute('src', allProducts[i].imgPath);
+    Product.allProducts[i].imageElement = document.createElement('img');
 
-    renderElement.appendChild(allProducts[i].imageElement);
+    figCapElement.textContent = Product.allProducts[i].name + ' had ' + Product.allProducts[i].numClicks + ' votes and was shown ' + Product.allProducts[i].numViews + ' times.'
+    Product.allProducts[i].imageElement.setAttribute('src', Product.allProducts[i].imgPath);
+
+    figureElement.appendChild(Product.allProducts[i].imageElement);
+    figureElement.appendChild(figCapElement);
+    renderElement.appendChild(figureElement);
     productList.appendChild(renderElement);
   }
 };
 
 emptyDisplayedProductsToAllProducts = function() {
-  while(productsDisplayed.length > 0) {
-    var nextProduct = productsDisplayed.pop();
-    allProducts.push(nextProduct);
+  while(Product.productsDisplayed.length > 0) {
+    var nextProduct = Product.productsDisplayed.pop();
+    Product.allProducts.push(nextProduct);
   }
 }
 
@@ -95,23 +99,23 @@ generateProductImages = function () {
   emptyDisplayedProductsToAllProducts();
 
   for (let i = 0; i < 3; i++) {
-    var randomProductIndex = Math.round(Math.floor(Math.random() * allProducts.length));
+    var randomProductIndex = Math.round(Math.floor(Math.random() * Product.allProducts.length));
     console.log(randomProductIndex);
 
-    var productToDisplay = allProducts[randomProductIndex];
-    allProducts.splice(randomProductIndex, 1);
+    var productToDisplay = Product.allProducts[randomProductIndex];
+    Product.allProducts.splice(randomProductIndex, 1);
 
-    console.log(allProducts);
+    console.log(Product.allProducts);
 
     productToDisplay.numViews++;
-    productsDisplayed.push(productToDisplay);
+    Product.productsDisplayed.push(productToDisplay);
     productList.appendChild(productToDisplay.render());
   }
 };
 
-allProducts.push(new Product('bag', 'img/bag.jpg'));
-allProducts.push(new Product('banana', 'img/banana.jpg'));
-allProducts.push(new Product('banana', 'img/banana.jpg'));
-allProducts.push(new Product('banana', 'img/banana.jpg'));
+Product.allProducts.push(new Product('bag', 'img/bag.jpg'));
+Product.allProducts.push(new Product('banana', 'img/banana.jpg'));
+Product.allProducts.push(new Product('banana', 'img/banana.jpg'));
+Product.allProducts.push(new Product('banana', 'img/banana.jpg'));
 
 generateProductImages();
