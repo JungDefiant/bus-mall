@@ -1,54 +1,38 @@
-/*
-  === TO DO (Lab Planning) ===
-  PART 1
-  1. Create Product constructor
-    a. name
-    b. img file path
-  2. GenerateProductImages method
-  3. Attach eventlistener to image sections; when user clicks product, they generate three new products
-
-  PART 2
-  1. Define property in Product for how many times a product is clicked
-  2. Update property for each time user selects product
-
-  PART 3
-  1. User is presented with 25 rounds of voting
-  2. Keep voting rounds in a variable
-
-  PART 4
-  1. Create property that tracks all products being considered
-  2. Remove eventlisteners after voting is done
-  3. Display list of products with votes by each of them
-*/
-
 var votingRounds = 25;
 var currentVotingRounds = 0;
-
 
 function Product(name, imgPath) {
   this.name = name;
   this.imgPath = imgPath;
   this.numClicks = 0;
   this.numViews = 0;
-  this.imageElement;
+  this.imageElement = document.createElement('img');
 };
 
 Product.allProducts = [];
 Product.productsDisplayed = [];
+Product.prevProductsDisplayed = [];
 
+// Returns a new element that is appended to a list
 Product.prototype.render = function () {
   var renderElement = document.createElement('li');
-  this.imageElement = document.createElement('img');
+  figureElement = document.createElement('figure');
+  figCapElement = document.createElement('figcaption');
 
   var newClickEvent = this.clickEvent.bind(this);
+
+  figCapElement.textContent = this.name + ' has ' + this.numViews + ' views.';
 
   this.imageElement.setAttribute('src', this.imgPath);
   this.imageElement.addEventListener('click', newClickEvent);
 
-  renderElement.appendChild(this.imageElement);
+  figureElement.appendChild(this.imageElement);
+  figureElement.appendChild(figCapElement);
+  renderElement.appendChild(figureElement);
   return renderElement;
 };
 
+// Calls event for when image is clicked
 Product.prototype.clickEvent = function () {
   currentVotingRounds++;
   this.numClicks++;
@@ -56,18 +40,19 @@ Product.prototype.clickEvent = function () {
   generateProductImages();
 };
 
-renderResults = function() {
+// Renders the results page
+renderResults = function () {
   var productList = document.getElementById('product-list');
   productList.innerHTML = '';
 
   for (let i = 0; i < Product.allProducts.length; i++) {
-    document.removeEventListener('click', Product.allProducts[i].imageElement.clickEvent);
+    console.log(Product.allProducts[i].imageElement + ' ' + Product.allProducts[i].name + ' ' + i);
+
+    Product.allProducts[i].imageElement.removeEventListener('click', Product.allProducts[i].imageElement.newClickEvent);
 
     var renderElement = document.createElement('li');
     var figureElement = document.createElement('figure');
     var figCapElement = document.createElement('figcaption');
-
-    Product.allProducts[i].imageElement = document.createElement('img');
 
     figCapElement.textContent = Product.allProducts[i].name + ' had ' + Product.allProducts[i].numClicks + ' votes and was shown ' + Product.allProducts[i].numViews + ' times.'
     Product.allProducts[i].imageElement.setAttribute('src', Product.allProducts[i].imgPath);
@@ -76,42 +61,96 @@ renderResults = function() {
     figureElement.appendChild(figCapElement);
     renderElement.appendChild(figureElement);
     productList.appendChild(renderElement);
+
+    generateChartDisplay();
   }
 };
 
-emptyDisplayedProductsToAllProducts = function() {
-  while(Product.productsDisplayed.length > 0) {
+// Empties all displayed products back into main products array
+emptyDisplayedProductsToAllProducts = function () {
+  while (Product.productsDisplayed.length > 0) {
     var nextProduct = Product.productsDisplayed.pop();
     Product.allProducts.push(nextProduct);
   }
 }
 
+// Generates a new set of product images
 generateProductImages = function () {
-  if(currentVotingRounds >= votingRounds) {
+  if (currentVotingRounds >= votingRounds) {
     emptyDisplayedProductsToAllProducts();
     renderResults();
     return;
   }
-  
-  var productList = document.getElementById('product-list');
-  productList.innerHTML = '';
+
+  var randomProductIndex;
+
+  Product.prevProductsDisplayed = [];
+
+  for(let i = 0; i < Product.productsDisplayed.length; i++) {
+    Product.prevProductsDisplayed.push(Product.productsDisplayed[i]);
+  }
 
   emptyDisplayedProductsToAllProducts();
 
+  console.log(Product.prevProductsDisplayed);
+  // console.log(Product.productsDisplayed);
+
+  var productList = document.getElementById('product-list');
+  productList.innerHTML = '';
+
   for (let i = 0; i < 3; i++) {
-    var randomProductIndex = Math.round(Math.floor(Math.random() * Product.allProducts.length));
-    console.log(randomProductIndex);
+    do {
+      randomProductIndex = Math.round(Math.floor(Math.random() * Product.allProducts.length));
+      // console.log(Product.allProducts[randomProductIndex]);
+    } while(Product.prevProductsDisplayed.some(prod => prod.name === Product.allProducts[randomProductIndex].name));
 
     var productToDisplay = Product.allProducts[randomProductIndex];
     Product.allProducts.splice(randomProductIndex, 1);
 
-    console.log(Product.allProducts);
-
     productToDisplay.numViews++;
     Product.productsDisplayed.push(productToDisplay);
+    
     productList.appendChild(productToDisplay.render());
   }
+
+  console.log(Product.productsDisplayed);
 };
+
+// Generates a chart display
+function generateChartDisplay() {
+  var chart, productNames = [], productVotes = [];
+  var productChart = document.getElementById('product-chart');
+
+
+  for(var i = 0; i < Product.allProducts.length; i++) {
+    productNames.push(Product.allProducts[i].name);
+    productVotes.push(Product.allProducts[i].numClicks);
+  }
+
+  chart = new Chart(productChart, {
+    type: 'bar',
+    data: {
+      labels: productNames,
+      datasets: [{
+        label: '# of Votes',
+        data: productVotes,
+        backgroundColor: 'rgba(255, 159, 64, 0.6)',
+        borderColor: 'rgba(54, 162, 235, 0.2)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+
 
 Product.allProducts.push(new Product('Droid Bag', 'img/bag.jpg'));
 Product.allProducts.push(new Product('Banana Slicer', 'img/banana.jpg'));
