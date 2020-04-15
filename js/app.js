@@ -7,6 +7,7 @@ function Product(name, imgPath) {
   this.numClicks = 0;
   this.numViews = 0;
   this.imageElement = document.createElement('img');
+  this.boundClickEvent = this.clickEvent.bind(this);
 };
 
 Product.allProducts = [];
@@ -19,12 +20,11 @@ Product.prototype.render = function () {
   figureElement = document.createElement('figure');
   figCapElement = document.createElement('figcaption');
 
-  var newClickEvent = this.clickEvent.bind(this);
-
   figCapElement.textContent = this.name + ' has ' + this.numViews + ' views.';
 
+  this.imageElement = document.createElement('img');
   this.imageElement.setAttribute('src', this.imgPath);
-  this.imageElement.addEventListener('click', newClickEvent);
+  this.imageElement.addEventListener('click', this.boundClickEvent);
 
   figureElement.appendChild(this.imageElement);
   figureElement.appendChild(figCapElement);
@@ -48,7 +48,7 @@ renderResults = function () {
   for (let i = 0; i < Product.allProducts.length; i++) {
     console.log(Product.allProducts[i].imageElement + ' ' + Product.allProducts[i].name + ' ' + i);
 
-    Product.allProducts[i].imageElement.removeEventListener('click', Product.allProducts[i].imageElement.newClickEvent);
+    Product.allProducts[i].imageElement.removeEventListener('click', Product.allProducts[i].boundClickEvent);
 
     var renderElement = document.createElement('li');
     var figureElement = document.createElement('figure');
@@ -67,53 +67,43 @@ renderResults = function () {
 };
 
 // Empties all displayed products back into main products array
-emptyDisplayedProductsToAllProducts = function () {
-  while (Product.productsDisplayed.length > 0) {
-    var nextProduct = Product.productsDisplayed.pop();
-    Product.allProducts.push(nextProduct);
+emptyArrayToOtherArray = function (arrayToEmpty, arrayToPushTo) {
+  while (arrayToEmpty.length > 0) {
+    var nextElement = arrayToEmpty.pop();
+    arrayToPushTo.push(nextElement);
   }
 }
 
 // Generates a new set of product images
 generateProductImages = function () {
   if (currentVotingRounds >= votingRounds) {
-    emptyDisplayedProductsToAllProducts();
+    emptyArrayToOtherArray(Product.productsDisplayed, Product.allProducts);
+    emptyArrayToOtherArray(Product.prevProductsDisplayed, Product.allProducts);
     renderResults();
     return;
   }
 
   var randomProductIndex;
 
-  Product.prevProductsDisplayed = [];
-
-  for(let i = 0; i < Product.productsDisplayed.length; i++) {
-    Product.prevProductsDisplayed.push(Product.productsDisplayed[i]);
-  }
-
-  emptyDisplayedProductsToAllProducts();
-
-  console.log(Product.prevProductsDisplayed);
-  // console.log(Product.productsDisplayed);
+  console.log('Previous products: ' + Product.prevProductsDisplayed);
+  console.log('All products: ' + Product.allProducts);
 
   var productList = document.getElementById('product-list');
   productList.innerHTML = '';
 
   for (let i = 0; i < 3; i++) {
-    do {
-      randomProductIndex = Math.round(Math.floor(Math.random() * Product.allProducts.length));
-      // console.log(Product.allProducts[randomProductIndex]);
-    } while(Product.prevProductsDisplayed.some(prod => prod.name === Product.allProducts[randomProductIndex].name));
+    randomProductIndex = Math.round(Math.floor(Math.random() * Product.allProducts.length));
 
     var productToDisplay = Product.allProducts[randomProductIndex];
     Product.allProducts.splice(randomProductIndex, 1);
+    Product.productsDisplayed.push(productToDisplay);
 
     productToDisplay.numViews++;
-    Product.productsDisplayed.push(productToDisplay);
-    
     productList.appendChild(productToDisplay.render());
   }
 
-  console.log(Product.productsDisplayed);
+  emptyArrayToOtherArray(Product.prevProductsDisplayed, Product.allProducts);
+  emptyArrayToOtherArray(Product.productsDisplayed, Product.prevProductsDisplayed);
 };
 
 // Generates a chart display
