@@ -7,6 +7,7 @@ function Product(name, imgPath) {
   this.numClicks = 0;
   this.numViews = 0;
   this.imageElement = document.createElement('img');
+  this.boundClickEvent = this.clickEvent.bind(this);
 };
 
 Product.allProducts = [];
@@ -19,12 +20,11 @@ Product.prototype.render = function () {
   figureElement = document.createElement('figure');
   figCapElement = document.createElement('figcaption');
 
-  var newClickEvent = this.clickEvent.bind(this);
-
   figCapElement.textContent = this.name + ' has ' + this.numViews + ' views.';
 
+  this.imageElement = document.createElement('img');
   this.imageElement.setAttribute('src', this.imgPath);
-  this.imageElement.addEventListener('click', newClickEvent);
+  this.imageElement.addEventListener('click', this.boundClickEvent);
 
   figureElement.appendChild(this.imageElement);
   figureElement.appendChild(figCapElement);
@@ -48,7 +48,7 @@ renderResults = function () {
   for (let i = 0; i < Product.allProducts.length; i++) {
     console.log(Product.allProducts[i].imageElement + ' ' + Product.allProducts[i].name + ' ' + i);
 
-    Product.allProducts[i].imageElement.removeEventListener('click', Product.allProducts[i].clickEvent);
+    Product.allProducts[i].imageElement.removeEventListener('click', Product.allProducts[i].boundClickEvent);
 
     var renderElement = document.createElement('li');
     var figureElement = document.createElement('figure');
@@ -68,10 +68,9 @@ renderResults = function () {
 
 // Empties all displayed products back into main products array
 emptyArrayToOtherArray = function (arrayToEmpty, arrayToPushTo) {
-  while (arrayToEmpty > 0) {
+  while (arrayToEmpty.length > 0) {
     var nextElement = arrayToEmpty.pop();
     arrayToPushTo.push(nextElement);
-    console.log(arrayToPushTo.length);
   }
 }
 
@@ -86,12 +85,8 @@ generateProductImages = function () {
 
   var randomProductIndex;
 
-  if(Product.prevProductsDisplayed.length > 0) emptyArrayToOtherArray(Product.prevProductsDisplayed, Product.allProducts);
-  emptyArrayToOtherArray(Product.productsDisplayed, Product.prevProductsDisplayed);
-
   console.log('Previous products: ' + Product.prevProductsDisplayed);
-  console.log('Products to display: ' + Product.productsDisplayed);
-  console.log('All products: ' + Product.productsDisplayed);
+  console.log('All products: ' + Product.allProducts);
 
   var productList = document.getElementById('product-list');
   productList.innerHTML = '';
@@ -106,6 +101,9 @@ generateProductImages = function () {
     productToDisplay.numViews++;
     productList.appendChild(productToDisplay.render());
   }
+
+  emptyArrayToOtherArray(Product.prevProductsDisplayed, Product.allProducts);
+  emptyArrayToOtherArray(Product.productsDisplayed, Product.prevProductsDisplayed);
 };
 
 // Generates a chart display
@@ -150,18 +148,18 @@ Product.allProducts.push(new Product('Bathroom Selfie Stick', 'img/bathroom.jpg'
 Product.allProducts.push(new Product('Running Rain Boots', 'img/boots.jpg'));
 Product.allProducts.push(new Product('All-In-One Breakfast Kitchen', 'img/breakfast.jpg'));
 Product.allProducts.push(new Product('Meatball Bubblegum', 'img/bubblegum.jpg'));
-// Product.allProducts.push(new Product('Best Chair', 'img/chair.jpg'));
-// Product.allProducts.push(new Product('Effigy Of The High Priest', 'img/cthulhu.jpg'));
-// Product.allProducts.push(new Product('Duck Mask For Dogs', 'img/dog-duck.jpg'));
-// Product.allProducts.push(new Product('Dragon Meat', 'img/dragon.jpg'));
-// Product.allProducts.push(new Product('Silverware Pen Caps', 'img/pen.jpg'));
-// Product.allProducts.push(new Product('Pet Sweep', 'img/pet-sweep.jpg'));
-// Product.allProducts.push(new Product('Pizza Scissors', 'img/scissors.jpg'));
-// Product.allProducts.push(new Product('Shark Sleeping Bag', 'img/shark.jpg'));
-// Product.allProducts.push(new Product('Baby Sweep', 'img/sweep.png'));
-// Product.allProducts.push(new Product('Taun-Taun Sleeping Bag', 'img/tauntaun.jpg'));
-// Product.allProducts.push(new Product('Unicorn Meat', 'img/unicorn.jpg'));
-// Product.allProducts.push(new Product('Thumb Drive From The Deep', 'img/usb.gif'));
-// Product.allProducts.push(new Product('Self-Refilling Water Can', 'img/water-can.jpg'));
-// Product.allProducts.push(new Product('Impossible Wine Glass', 'img/wine-glass.jpg'));
+Product.allProducts.push(new Product('Best Chair', 'img/chair.jpg'));
+Product.allProducts.push(new Product('Effigy Of The High Priest', 'img/cthulhu.jpg'));
+Product.allProducts.push(new Product('Duck Mask For Dogs', 'img/dog-duck.jpg'));
+Product.allProducts.push(new Product('Dragon Meat', 'img/dragon.jpg'));
+Product.allProducts.push(new Product('Silverware Pen Caps', 'img/pen.jpg'));
+Product.allProducts.push(new Product('Pet Sweep', 'img/pet-sweep.jpg'));
+Product.allProducts.push(new Product('Pizza Scissors', 'img/scissors.jpg'));
+Product.allProducts.push(new Product('Shark Sleeping Bag', 'img/shark.jpg'));
+Product.allProducts.push(new Product('Baby Sweep', 'img/sweep.png'));
+Product.allProducts.push(new Product('Taun-Taun Sleeping Bag', 'img/tauntaun.jpg'));
+Product.allProducts.push(new Product('Unicorn Meat', 'img/unicorn.jpg'));
+Product.allProducts.push(new Product('Thumb Drive From The Deep', 'img/usb.gif'));
+Product.allProducts.push(new Product('Self-Refilling Water Can', 'img/water-can.jpg'));
+Product.allProducts.push(new Product('Impossible Wine Glass', 'img/wine-glass.jpg'));
 generateProductImages();
