@@ -2,6 +2,15 @@ body {
   margin-left: auto;
   margin-right: auto;
   max-width: 1050px;
+  background-color: powderblue;
+  font-size: x-large;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+h2 {
+  font-size: xx-large;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  text-align: center;
 }
 
 #product-list {
@@ -24,4 +33,13 @@ figure {
   padding: 20px;
   max-width: 150px;
   max-height: 150px;
+}
+
+figcaption {
+  float: left;
+  font-size: medium;
+}
+
+#product-chart {
+  margin-top: auto;
 }
