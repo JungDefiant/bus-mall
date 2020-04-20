@@ -36,7 +36,6 @@ Product.prototype.render = function () {
 Product.prototype.clickEvent = function () {
   currentVotingRounds++;
   this.numClicks++;
-  console.log(this.name + ' was clicked ' + this.numClicks);
   generateProductImages();
   saveProductsToJSON();
 };
@@ -47,7 +46,6 @@ renderResults = function () {
   productList.innerHTML = '';
 
   for (let i = 0; i < Product.allProducts.length; i++) {
-    console.log(Product.allProducts[i].imageElement + ' ' + Product.allProducts[i].name + ' ' + i);
 
     Product.allProducts[i].imageElement.removeEventListener('click', Product.allProducts[i].boundClickEvent);
 
@@ -85,9 +83,6 @@ generateProductImages = function () {
   }
 
   var randomProductIndex;
-
-  console.log('Previous products: ' + Product.prevProductsDisplayed);
-  console.log('All products: ' + Product.allProducts);
 
   var productList = document.getElementById('product-list');
   productList.innerHTML = '';
